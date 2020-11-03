@@ -48,7 +48,7 @@ module OmniAuth
           :city         => raw_info['user']['city'],
           :state        => raw_info['user']['state'],
           :country      => raw_info['user']['country'],
-          :dob          => !raw_info['user']['dateOfBirth'].empty? ? Date.strptime(raw_info['user']['dateOfBirth'], '%Y-%m-%d'):nil,
+          :dob          => date_of_birth,
           :member_since => Date.strptime(raw_info['user']['memberSince'], '%Y-%m-%d'),
           :locale       => raw_info['user']['locale'],
           :timezone     => raw_info['user']['timezone']
@@ -70,6 +70,10 @@ module OmniAuth
           @raw_info ||= access_token.
             get('https://api.fitbit.com/1/user/-/profile.json').parsed
         end
+      end
+
+      def date_of_birth
+        raw_info.dig('user', 'dateOfBirth').present? ? Date.strptime(raw_info.dig('user', 'dateOfBirth'), '%Y-%m-%d') : nil
       end
     end
   end
